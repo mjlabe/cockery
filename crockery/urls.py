@@ -17,9 +17,11 @@ from django.contrib import admin
 from django.urls import path
 
 from apps.question.views import api as question_api
+from apps.game.views import api as game_api
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('question/', question_api.urls)
+    path('question/', question_api.urls),
+    path('game/', game_api.urls),
 ]

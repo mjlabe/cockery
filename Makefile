@@ -9,3 +9,7 @@ migrate:
 .PHONY: run
 run:
 	python manage.py runserver
+
+.PHONY: superuser
+superuser:
+	python manage.py createsuperuser
