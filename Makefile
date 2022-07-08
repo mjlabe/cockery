@@ -2,9 +2,9 @@ CONTAINER_NAME:=app
 TAG:=$(shell git log -1 --pretty=format:"%H")
 
 
-.PHONY: migrations
-migrations:
-	python manage.py makemigrations
+.PHONY: migrations-local
+migrations-local:
+	python src/manage.py makemigrations
 
 
 # =====local=====
@@ -43,6 +43,10 @@ up: build
 .PHONY: down
 down:
 	docker-compose down
+
+.PHONY: migrations
+migrations:
+	docker-compose run --rm $(CONTAINER_NAME) /src/manage.py makemigrations
 
 .PHONY: migrate
 migrate:

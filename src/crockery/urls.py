@@ -16,12 +16,24 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from apps.question.views import api as question_api
-from apps.game.views import api as game_api
+from ninja import NinjaAPI
+
+from apps.game.views import router as game_router
+from apps.question.views import game_question_router, question_router
+from apps.crock.views import router as crock_router
+
+
+game_api = NinjaAPI(title="Game", urls_namespace="Game")
+game_router.add_router("", game_question_router)
+game_router.add_router("", crock_router)
+game_api.add_router("", game_router)
+
+question_api = NinjaAPI(title="Question", urls_namespace="Question")
+question_api.add_router("", question_router)
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('question/', question_api.urls),
-    path('game/', game_api.urls),
+    path("api/game/", game_api.urls),
+    path("api/question/", question_api.urls),
 ]
