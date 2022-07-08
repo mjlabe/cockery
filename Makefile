@@ -1,4 +1,4 @@
-CONTAINER_NAME:=crockery
+CONTAINER_NAME:=app
 TAG:=$(shell git log -1 --pretty=format:"%H")
 
 
