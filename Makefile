@@ -1,4 +1,4 @@
-CONTAINER_NAME:=crockery
+CONTAINER_NAME:=app
 TAG:=$(shell git log -1 --pretty=format:"%H")
 
 
@@ -10,26 +10,26 @@ migrations:
 # =====local=====
 
 .PHONY: migrate-local
-migrate:
+migrate-local:
 	python manage.py migrate
 
 .PHONY: run-local
-run:
+run-local:
 	python manage.py runserver
 
 .PHONY: superuser-local
-superuser:
+superuser-local:
 	python manage.py createsuperuser
 
 # =====docker=====
 
 .PHONY: build
 build: ## Build the docker image.
-	docker build --rm $(CACHE_FROM) --build-arg VERSION=$(TAG) -t $(CONTAINER_NAME) .
+	docker build --rm $(CACHE_FROM) --build-arg VERSION=$(TAG) -t $(CONTAINER_NAME) . --platform linux/amd64
 
-.PHONY: migrate-local
-migrate:
-	python manage.py migrate
+.PHONY: build-nc
+build-nc: ## Build the docker image.
+	docker build --rm $(CACHE_FROM) --build-arg VERSION=$(TAG) -t $(CONTAINER_NAME) . --no-cache --platform linux/amd64
 
 .PHONY: run
 run:
@@ -46,8 +46,8 @@ down:
 
 .PHONY: migrate
 migrate:
-	docker-compose run --rm $(CONTAINER_NAME) ./manage.py migrate
+	docker-compose run --rm $(CONTAINER_NAME) /src/manage.py migrate
 
-.PHONY: superuser-local
+.PHONY: superuser
 superuser:
-	docker-compose run --rm $(CONTAINER_NAME) ./manage.py createsuperuser
+	docker-compose run --rm $(CONTAINER_NAME) /src/manage.py createsuperuser
